@@ -1,0 +1,5 @@
+wwwroot/Data
+wwwroot/Uploads
+wwwroot/Runtime
+wwwroot/Application/Common/Conf/config.php
+wwwroot/Application/User/Conf/config.php
