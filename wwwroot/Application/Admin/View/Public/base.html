@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{$meta_title}|{:C('SO_ADMIN_SITE_TITLE',null,'OneThink管理平台')}</title>
+    <title>{$meta_title}|{:C('ADMIN_SITE_TITLE',null,'OneThink管理平台')}</title>
     <link href="__ROOT__/Public/favicon.ico" type="image/x-icon" rel="shortcut icon">
     <link rel="stylesheet" type="text/css" href="__CSS__/base.css" media="all">
     <link rel="stylesheet" type="text/css" href="__CSS__/common.css" media="all">
@@ -16,10 +16,10 @@
     <script type="text/javascript" src="__JS__/jquery.mousewheel.js"></script>
     <!--<![endif]-->
     <block name="style"></block>
-    <if condition="!empty(C('SO_ADMIN_SITE_LOGO'))">
+    <if condition="!empty(C('ADMIN_SITE_LOGO'))">
     <style>
     .header .logo {
-        background: url("{:C('SO_ADMIN_SITE_LOGO')}") no-repeat;
+        background: url("{:C('ADMIN_SITE_LOGO')}") no-repeat;
     }
     </style>
     </if>
@@ -109,7 +109,7 @@
 
             <block name="body"> </block>
         </div>
-        <if condition="C('SO_ADMIN_SHOW_COPYRIGHT',null,true)">
+        <if condition="C('ADMIN_SHOW_COPYRIGHT',null,true)">
             <div class="cont-ft">
                 <div class="copyright">
                     <div class="fl">感谢使用<a href="http://www.onethink.cn" target="_blank">OneThink</a>管理平台</div>
