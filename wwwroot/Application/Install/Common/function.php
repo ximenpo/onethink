@@ -290,9 +290,15 @@ function update_tables($db, $prefix = '')
 /**
  * 按顺序执行初始化插件(_OneThink_Initialize[0-9])
  * @author ximenpo <ximenpo@jiandan.ren>
+ * @return  true: succeed    false: error
  */
 function install_initialize_addons()
 {
+    if(empty(C('AUTOLOAD_NAMESPACE'))){
+        C('AUTOLOAD_NAMESPACE', array('Addons' => ONETHINK_ADDON_PATH));
+    }
+
+    show_msg('检测初始化插件...');
     for($i = 0; $i < 10; ++$i){
         $addon_name  = "_Initialize{$i}_";
         $addon_class = get_addon_class($addon_name);
@@ -300,16 +306,61 @@ function install_initialize_addons()
             continue;
         }
 
-        show_msg("开始执行初始化插件[{$addon_name}]...");
         $addons = new $addon_class;
         $info   = $addons->info;
         if(!$info || !$addons->checkInfo()){
-            show_msg("初始化插件[{$addon_name}] 信息缺失", 'error');
+            show_msg("安装初始化插件{$addon_name}...失败: 信息缺失", 'error');
             return  false;
         }
         session('addons_install_error',null);
         if(!$addons->install()){
-            show_msg("初始化插件[{$addon_name}] 安装失败".session('addons_install_error'), 'error');
+            show_msg("安装初始化插件{$addon_name}...失败: ".session('addons_install_error'), 'error');
+            return  false;
+        }
+        show_msg("安装初始化插件{$addon_name}...成功");
+    }
+    show_msg('初始化插件安装完成！');
+
+    return  true;
+}
+
+/**
+ * 执行数据库脚本文件
+ * @author ximenpo <ximenpo@jiandan.ren>
+ * @return  true: succeed    false: error
+ */
+function install_execute_sqlfile($sqlfile)
+{
+    $dbcfg  = session('db_config');
+    if(!$dbcfg){
+        session('addons_install_error', '获取数据库配置失败');
+        return  false;
+    }
+    $db     = Think\Db::getInstance($dbcfg);
+    if(!$dbcfg){
+        session('addons_install_error', '创建数据库对象失败');
+        return  false;
+    }
+    $prefix = $dbcfg['DB_PREFIX'];
+
+    //读取SQL文件
+    $sql = file_get_contents($sqlfile);
+    $sql = str_replace("\r", "\n", $sql);
+    $sql = explode(";\n", $sql);
+
+    //替换表前缀
+    $orginal = C('ORIGINAL_TABLE_PREFIX');
+    $sql     = str_replace(" `{$orginal}", " `{$prefix}", $sql);
+
+    //开始安装
+    foreach ($sql as $value) {
+        $value = trim($value);
+        if (empty($value)) {
+            continue;
+        }
+
+        if (!$db->execute($value)) {
+            session('addons_install_error', '执行['.$value.']失败！');
             return  false;
         }
     }
