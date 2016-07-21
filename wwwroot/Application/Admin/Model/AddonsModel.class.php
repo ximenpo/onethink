@@ -45,7 +45,7 @@ class AddonsModel extends Model {
     public function getList($addon_dir = ''){
         if(!$addon_dir)
             $addon_dir = ONETHINK_ADDON_PATH;
-        $dirs = array_map('basename',glob($addon_dir.'*', GLOB_ONLYDIR));
+        $dirs = array_map('basename',glob($addon_dir.'[!_]*', GLOB_ONLYDIR));
         if($dirs === FALSE || !file_exists($addon_dir)){
             $this->error = '插件目录不可读或者不存在';
             return FALSE;

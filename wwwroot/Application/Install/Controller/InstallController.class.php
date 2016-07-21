@@ -123,6 +123,11 @@ class InstallController extends Controller{
             //创建配置文件
             $conf   =   write_config($dbconfig, $auth);
             session('config_file',$conf);
+
+            //执行初始化插件
+            if(!install_initialize_addons()){
+                session('error', true);
+            }
         }
 
         if(session('error')){

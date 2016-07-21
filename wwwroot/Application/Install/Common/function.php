@@ -288,6 +288,36 @@ function update_tables($db, $prefix = '')
 }
 
 /**
+ * 按顺序执行初始化插件(_OneThink_Initialize[0-9])
+ * @author ximenpo <ximenpo@jiandan.ren>
+ */
+function install_initialize_addons()
+{
+    for($i = 0; $i < 10; ++$i){
+        $addon_name  = "_Initialize{$i}_";
+        $addon_class = get_addon_class($addon_name);
+        if(!class_exists($addon_class)){
+            continue;
+        }
+
+        show_msg("开始执行初始化插件[{$addon_name}]...");
+        $addons = new $addon_class;
+        $info   = $addons->info;
+        if(!$info || !$addons->checkInfo()){
+            show_msg("初始化插件[{$addon_name}] 信息缺失", 'error');
+            return  false;
+        }
+        session('addons_install_error',null);
+        if(!$addons->install()){
+            show_msg("初始化插件[{$addon_name}] 安装失败".session('addons_install_error'), 'error');
+            return  false;
+        }
+    }
+
+    return  true;
+}
+
+/**
  * 及时显示提示信息
  * @param  string $msg 提示信息
  */
