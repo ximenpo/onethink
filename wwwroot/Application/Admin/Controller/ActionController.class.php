@@ -25,7 +25,7 @@ class ActionController extends AdminController {
         $list   =   $this->lists('ActionLog', $map);
         int_to_string($list);
         foreach ($list as $key=>$value){
-            $model_id                  =   get_document_field($value['model'],"name","id");
+            $model_id                  =   get_model_field($value['model'],"name","id");
             $list[$key]['model_id']    =   $model_id ? $model_id : 0;
         }
         $this->assign('_list', $list);
