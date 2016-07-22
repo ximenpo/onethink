@@ -18,7 +18,7 @@ class DocumentModel extends Model{
 
     /* 自动验证规则 */
     protected $_validate = array(
-        array('name', '/^[a-zA-Z]\w{0,39}$/', '文档标识不合法', self::VALUE_VALIDATE, 'regex', self::MODEL_BOTH),
+        array('name', '/^\w(\w|\.|\-){0,39}$/', '文档标识不合法', self::VALUE_VALIDATE, 'regex', self::MODEL_BOTH),
         array('name', 'checkName', '标识已经存在', self::VALUE_VALIDATE, 'callback', self::MODEL_BOTH),
         array('title', 'require', '标题不能为空', self::MUST_VALIDATE, 'regex', self::MODEL_BOTH),
         array('title', '1,80', '标题长度不能超过80个字符', self::MUST_VALIDATE, 'length', self::MODEL_BOTH),
@@ -139,7 +139,7 @@ class DocumentModel extends Model{
         $id = I('post.id');
         if(empty($id)){	//新增
         	$cate = I('post.category_id');
-        	$check 	=	M('Category')->getFieldById($cate,'check');  	
+        	$check 	=	M('Category')->getFieldById($cate,'check');
             $status = 	$check ? 2 : 1;
         }else{				//更新
             $status = $this->getFieldById($id, 'status');
@@ -326,7 +326,7 @@ class DocumentModel extends Model{
 
         //重置自动验证
         $this->_validate = array(
-            array('name', '/^[a-zA-Z]\w{0,39}$/', '文档标识不合法', self::VALUE_VALIDATE, 'regex', self::MODEL_BOTH),
+            array('name', '/^\w(\w|\.|\-){0,39}$/', '文档标识不合法', self::VALUE_VALIDATE, 'regex', self::MODEL_BOTH),
             array('name', '', '标识已经存在', self::VALUE_VALIDATE, 'unique', self::MODEL_BOTH),
             array('title', '1,80', '标题长度不能超过80个字符', self::VALUE_VALIDATE, 'length', self::MODEL_BOTH),
             array('description', '1,140', '简介长度不能超过140个字符', self::VALUE_VALIDATE, 'length', self::MODEL_BOTH),
@@ -398,7 +398,7 @@ class DocumentModel extends Model{
             case 3: // 段落
                 return array('status'=>0, 'info'=>'段落下面不允许再添加子内容');
             default:
-                return array('status'=>0, 'info'=>'父文档类型不正确');                       
+                return array('status'=>0, 'info'=>'父文档类型不正确');
         }
         return $res;
     }

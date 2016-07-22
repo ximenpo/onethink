@@ -18,7 +18,7 @@ class DocumentModel extends Model{
 
     /* 自动验证规则 */
     protected $_validate = array(
-        array('name', '/^[a-zA-Z]\w{0,30}$/', '文档标识不合法', self::VALUE_VALIDATE, 'regex', self::MODEL_BOTH),
+        array('name', '/^\w(\w|\.|\-){0,39}$/', '文档标识不合法', self::VALUE_VALIDATE, 'regex', self::MODEL_BOTH),
         array('name', '', '标识已经存在', self::VALUE_VALIDATE, 'unique', self::MODEL_BOTH),
         array('title', 'require', '标题不能为空', self::VALUE_VALIDATE, 'regex', self::MODEL_BOTH),
         array('category_id', 'require', '分类不能为空', self::MUST_VALIDATE , 'regex', self::MODEL_INSERT),
@@ -108,7 +108,7 @@ class DocumentModel extends Model{
             'category_id' => $info['category_id'],
             'status'      => 1,
             'create_time' => array('lt', NOW_TIME),
-            '_string'     => 'deadline = 0 OR deadline > ' . NOW_TIME,  			
+            '_string'     => 'deadline = 0 OR deadline > ' . NOW_TIME,
         );
 
         /* 返回前一条数据 */
@@ -127,7 +127,7 @@ class DocumentModel extends Model{
             'category_id' => $info['category_id'],
             'status'      => 1,
             'create_time' => array('lt', NOW_TIME),
-            '_string'     => 'deadline = 0 OR deadline > ' . NOW_TIME,  			
+            '_string'     => 'deadline = 0 OR deadline > ' . NOW_TIME,
         );
 
         /* 返回下一条数据 */
@@ -287,7 +287,7 @@ class DocumentModel extends Model{
         $name  = parse_name(get_document_model($model, 'name'), 1);
         $class = is_file(MODULE_PATH . 'Logic/' . $name . 'Logic' . EXT) ? $name : 'Base';
         $class = MODULE_NAME . '\\Logic\\' . $class . 'Logic';
-        return new $class($name);  		
+        return new $class($name);
     }
 
     /**
