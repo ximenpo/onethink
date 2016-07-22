@@ -123,11 +123,28 @@ class InstallController extends Controller{
             //创建配置文件
             $conf   =   write_config($dbconfig, $auth);
             session('config_file',$conf);
+        }
 
-            //执行初始化插件
-            if(!install_initialize_addons()){
-                session('error', true);
-            }
+        if(session('error')){
+            //show_msg();
+        } else {
+            session('step', 3);
+            //$this->redirect('Index/complete');
+            $this->redirect('step3_1');
+        }
+    }
+
+    //安装第3.1步，安装初始化插件
+    public function step3_1(){
+        if(session('step') != 3){
+            $this->redirect('step2');
+        }
+
+        $this->display('step3');
+
+        //执行初始化插件
+        if(!install_initialize_addons()){
+            session('error', true);
         }
 
         if(session('error')){
