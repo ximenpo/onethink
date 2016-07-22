@@ -22,13 +22,6 @@ class _Initialize0_Addon extends Addon{
         if(!install_execute_sqlfile(__DIR__ . '/install.sql')){
             return  false;
         }
-
-        $Member = D('Admin/Member');
-        $Member->login(1);
-        if(!is_login() || !is_administrator()){
-            return  false;
-        }
-        $Member->logout();
         return  true;
     }
 
