@@ -337,7 +337,7 @@ function install_execute_sqlfile($sqlfile)
         return  false;
     }
     $db     = Think\Db::getInstance($dbcfg);
-    if(!$dbcfg){
+    if(!$db){
         session('addons_install_error', '创建数据库对象失败');
         return  false;
     }
@@ -359,8 +359,8 @@ function install_execute_sqlfile($sqlfile)
             continue;
         }
 
-        if (!$db->execute($value)) {
-            session('addons_install_error', '执行['.$value.']失败！');
+        if ($db->execute($value) === false) {
+            session('addons_install_error', '执行['.$value.']失败: '.($db->error()));
             return  false;
         }
     }
