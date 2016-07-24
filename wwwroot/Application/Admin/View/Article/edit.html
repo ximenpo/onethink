@@ -16,6 +16,14 @@
 			</volist>
 			<present name="article">：<a href="{:U('article/index','cate_id='.$data['category_id'].'&pid='.$article['id'])}">{$article.title}</a></present>
 			]
+    		<notempty name="groups">[ 分组：
+                <select id="groups">
+                    <option value="0" <eq name="data.group_id" value="0">selected</eq>>无</option>
+                    <foreach name="groups" item="vo">
+                        <option value="{$key}" <eq name="data.group_id" value="$key">selected</eq>>{$vo}</option>
+                    </foreach>
+                </select>
+    		]</notempty>
 		</h2>
 	</div>
 	<!-- 标签页导航 -->
@@ -235,6 +243,11 @@ $(function(){
         minView:2,
         autoclose:true
     });
+
+    $('#groups').change(function(){
+        $("input[name='group_id']").val($(this).val());
+    });
+
     showTab();
 
 	<if condition="C('OPEN_DRAFTBOX') and (ACTION_NAME eq 'add' or $data['status'] eq 3)">
