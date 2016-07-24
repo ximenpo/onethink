@@ -948,7 +948,7 @@ CREATE TABLE `onethink_ucenter_app` (
   `url` varchar(100) NOT NULL COMMENT '应用URL',
   `ip` char(15) NOT NULL DEFAULT '' COMMENT '应用IP',
   `auth_key` varchar(100) NOT NULL DEFAULT '' COMMENT '加密KEY',
-  `sys_login` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '同步登陆',
+  `sys_login` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '同步登录',
   `allow_ip` varchar(255) NOT NULL DEFAULT '' COMMENT '允许访问的IP',
   `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
