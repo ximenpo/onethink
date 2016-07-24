@@ -18,7 +18,7 @@ class UserController extends HomeController {
 
 	/* 用户中心首页 */
 	public function index(){
-		
+
 	}
 
 	/* 注册页面 */
@@ -35,7 +35,7 @@ class UserController extends HomeController {
 			/* 检测密码 */
 			if($password != $repassword){
 				$this->error('密码和重复密码不一致！');
-			}			
+			}
 
 			/* 调用注册接口注册用户 */
             $User = new UserApi;
@@ -154,7 +154,7 @@ class UserController extends HomeController {
             if($res['status']){
                 $this->success('修改密码成功！');
             }else{
-                $this->error($res['info']);
+                $this->error($this->showRegError($res['info']));
             }
         }else{
             $this->display();
