@@ -1016,3 +1016,52 @@ function check_category_model($info){
     $array  =   explode(',', $info['pid'] ? $cate['model_sub'] : $cate['model']);
     return in_array($info['model_id'], $array);
 }
+
+/**
+ * 根据文档字段生成枚举选项
+ * @param mixed $value 条件，可用常量或者数组
+ * @param string $condition 条件字段
+ * @param string $field 需要返回的字段，不传则返回整个数据
+ *
+ * @author ximenpo <ximenpo@jiandan.ren>
+ */
+function get_enum_options_by_document_field($value = null, $condition = 'id', $key_field = null, $display_field = null){
+    //拼接参数
+    $map[$condition] = $value;
+    $info = M('Document')->where($map);
+    if(empty($display_field)){
+        $info = $info->field("`{$key_field}` as k, `{$key_field}` as v")->select();
+    }else{
+        $info = $info->field("`{$key_field}` as k, `{$display_field}` as v")->select();
+    }
+
+    if(!$info){
+        return  array();
+    }
+
+    $ret    = array();
+    foreach ($info as $item) {
+        $ret[$item['k']]  = $item['v'];
+    }
+    return  $ret;
+}
+
+/**
+ * 根据模型名获取对应的模型ID
+ * @param string model_name 条件字段
+ * @return int:model_id  false:error
+ * @author ximenpo <ximenpo@jiandan.ren>
+ */
+function get_model_id($model_name){
+    if(empty($model_name)){
+        return false;
+    }
+
+    $models = get_document_model();
+    foreach ($models as $key => $value) {
+        if($value['name'] == $model_name){
+            return  $key;
+        }
+    }
+    return  false;
+}
