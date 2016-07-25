@@ -289,8 +289,8 @@ function update_tables($db, $prefix = '')
 
 /**
  * 按顺序执行初始化插件(_OneThink_Initialize[0-9])
- * @author ximenpo <ximenpo@jiandan.ren>
  * @return  true: succeed    false: error
+ * @author ximenpo <ximenpo@jiandan.ren>
  */
 function install_initialize_addons()
 {
@@ -299,6 +299,8 @@ function install_initialize_addons()
     }
 
     show_msg('检测初始化插件...');
+    $result = true;
+    spl_autoload_register('install_autoload_AdminModel');
     for($i = 0; $i < 10; ++$i){
         $addon_name  = "_Initialize{$i}_";
         $addon_class = get_addon_class($addon_name);
@@ -309,25 +311,31 @@ function install_initialize_addons()
         $addons = new $addon_class;
         $info   = $addons->info;
         if(!$info || !$addons->checkInfo()){
+            $result = false;
             show_msg("安装初始化插件{$addon_name}...失败: 信息缺失", 'error');
-            return  false;
+            break;
         }
         session('addons_install_error',null);
         if(!$addons->install()){
+            $result = false;
             show_msg("安装初始化插件{$addon_name}...失败: ".session('addons_install_error'), 'error');
-            return  false;
+            break;
         }
         show_msg("安装初始化插件{$addon_name}...成功");
     }
-    show_msg('初始化插件安装完成！');
+    spl_autoload_unregister('install_autoload_AdminModel');
 
-    return  true;
+    if($result){
+        show_msg('初始化插件安装完成！');
+    }
+
+    return  $result;
 }
 
 /**
  * 执行数据库脚本文件
- * @author ximenpo <ximenpo@jiandan.ren>
  * @return  true: succeed    false: error
+ * @author ximenpo <ximenpo@jiandan.ren>
  */
 function install_execute_sqlfile($sqlfile)
 {
@@ -366,6 +374,23 @@ function install_execute_sqlfile($sqlfile)
     }
 
     return  true;
+}
+
+/**
+ * 安装过程中自动加载对应的Admin模型类
+ * @author ximenpo <ximenpo@jiandan.ren>
+ * @return  true: succeed    false: error
+ */
+function    install_autoload_AdminModel($class_name){
+    if(strstr($class_name, 'Install\\Model\\')){
+        $class_admin    = str_replace('Install\\', 'Admin\\',   $class_name);
+        $class          = str_replace('Install\\Model\\', '',   $class_name);
+        $path           = APP_PATH.str_replace('\\', '/', $class_admin).'.class.php';
+        if(is_file($path)){
+            include_once    $path;
+            return  eval("namespace Install\Model; class {$class} extends \\{$class_admin}{}");
+        }
+    }
 }
 
 /**
