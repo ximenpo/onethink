@@ -691,14 +691,14 @@ $.extend($.thinkbox, {
         $.extend(options, opt || {}); //合并配置项
         onload = options.onload; //设置加载完成后的回调方法
         //创建iframe
-        iframe = $("<iframe/>").attr({
+        iframe = $(options.name?'<iframe name="'+options.name+'" />':"<iframe/>").attr({
             "width"       : options.width,
             "height"      : options.height,
             "frameborder" : 0,
             "scrolling"   : options.scrolling,
             "src"         : url})
             .load(function(){fire.call(self, onload)});
-        del(["width", "height", "scrolling", "onload"], options);//删除不必要的信息
+        del(["width", "height", "scrolling", "onload", "name"], options);//删除不必要的信息
         self = $.thinkbox(iframe, options);
         return self;
     },
