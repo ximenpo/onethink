@@ -264,6 +264,10 @@ class DocumentListController extends AdminController {
         if(!is_null($group_id)){
             $map['group_id']	=	$group_id;
         }
+        //指定分页每页记录数
+        if(!isset($_REQUEST['r'])){
+            $_REQUEST['r']  = get_category($cate_id, 'list_row');
+        }
         $list = $this->lists($Document,$map,'level DESC,DOCUMENT.id DESC',$field);
 
         if($map['pid']){
