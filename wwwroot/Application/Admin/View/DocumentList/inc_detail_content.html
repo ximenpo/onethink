@@ -168,7 +168,7 @@
     </volist>
 
     <div class="form-item cf">
-        <button class="btn submit-btn ajax-post hidden" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+        <input class="btn submit-btn" id="reset" type="reset" value="重 置" target-form="form-horizontal">
         <a class="btn btn-return" href="{$Think.cookie.__forward__}">返 回</a>
         <if condition="C('OPEN_DRAFTBOX') and (ACTION_NAME eq 'add' or $data['status'] eq 3)">
         <button class="btn save-btn" url="{:U('article/autoSave')}" target-form="form-horizontal" id="autoSave">
