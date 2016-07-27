@@ -1,0 +1,33 @@
+
+<!-- 标题栏 -->
+<div class="main-title">
+    <h2>{$model['title']}列表
+        <notempty name="groups">[ 分组：<empty name="group_id"><strong>全部</strong><else/><a href="{:U('',array('pid'=>$pid,'cate_id'=>$cate_id))}">全部</a></empty>
+            <foreach name="groups" item="vo">
+            <neq name="group_id" value="$key"><a href="{:U('',array('pid'=>$pid,'cate_id'=>$cate_id,'model_id'=>$model_id,'group_id'=>$key))}">{$vo}</a><else/><strong>{$vo}</strong></neq>&nbsp;
+            </foreach>
+        ]</notempty>
+    </h2>
+</div>
+
+<div class="cf">
+    <!-- 按钮工具栏 -->
+    <div class="fl">
+        <button class="btn ajax-post" target-form="ids" url="{:U("Article/setStatus",array("status"=>1))}">启 用</button>
+    	<button class="btn ajax-post" target-form="ids" url="{:U("Article/setStatus",array("status"=>0))}">禁 用</button>
+    	<button class="btn ajax-post" target-form="ids" url="{:U("Article/move")}">移 动</button>
+    	<button class="btn ajax-post" target-form="ids" url="{:U("Article/copy")}">复 制</button>
+    	<button class="btn ajax-post" target-form="ids" hide-data="true" url="{:U("Article/paste")}">粘 贴</button>
+        <button class="btn ajax-post confirm" target-form="ids" url="{:U("Article/setStatus",array("status"=>-1))}">删 除</button>
+    	<input type="hidden" class="hide-data" name="cate_id" value="{$cate_id}"/>
+    	<input type="hidden" class="hide-data" name="pid" value="{$pid}"/>
+    </div>
+
+	<!-- 高级搜索 -->
+	<div class="search-form fr cf">
+		<div class="sleft">
+			<input type="text" name="title" class="search-input" value="{:I('title')}" placeholder="搜索标题">
+			<a class="sch-btn" href="javascript:;" id="search" url="{:U('','pid='.I('pid',0).'&cate_id='.$cate_id,false)}"><i class="btn-search"></i></a>
+		</div>
+	</div>
+</div>

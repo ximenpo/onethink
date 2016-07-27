@@ -1,0 +1,28 @@
+<!-- 数据表格 -->
+<div class="data-table">
+    <table>
+        <!-- 表头 -->
+        <thead>
+            <tr>
+                <th class="row-selected row-selected">
+                    <input class="check-all" type="checkbox">
+                </th>
+                <volist name="list_grids" id="field">
+                    <th>{$field.title}</th>
+                </volist>
+            </tr>
+        </thead>
+
+        <!-- 列表 -->
+        <tbody>
+            <volist name="list" id="data">
+                <tr>
+                    <td><input class="ids" type="checkbox" value="{$data['id']}" name="ids[]"></td>
+                    <volist name="list_grids" id="grid">
+                        <td>{:get_list_field($data,$grid)}</td>
+                    </volist>
+                </tr>
+            </volist>
+        </tbody>
+    </table>
+</div>
