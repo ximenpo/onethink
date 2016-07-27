@@ -16,6 +16,7 @@ class DocumentListController extends AdminController {
         };
 
         $this->meta_title   = get_category_title($cate_id);
+        $this->assign('file_tool_buttons', 'inc_index_tool_buttons');
         $this->display();
     }
 
