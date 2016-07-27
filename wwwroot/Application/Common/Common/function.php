@@ -460,11 +460,11 @@ function get_nickname($uid = 0){
  * @param  string  $field 要获取的字段名
  * @return string         分类信息
  */
-function get_category($id, $field = null){
+function get_category($id = null, $field = null){
     static $list;
 
     /* 非法分类ID */
-    if(empty($id) || !is_numeric($id)){
+    if(!(is_null($id) || is_numeric($id))){
         return '';
     }
 
@@ -473,16 +473,24 @@ function get_category($id, $field = null){
         $list = S('sys_category_list');
     }
 
-    /* 获取分类名称 */
-    if(!isset($list[$id])){
-        $cate = M('Category')->find($id);
-        if(!$cate || 1 != $cate['status']){ //不存在分类，或分类被禁用
-            return '';
+    /* 获取模型名称 */
+    if(empty($list)){
+        $map   = array('status' => 1);
+        $model = M('Category')->where($map)->field(true)->select();
+        foreach ($model as $value) {
+            $list[$value['id']] = $value;
         }
-        $list[$id] = $cate;
         S('sys_category_list', $list); //更新缓存
     }
-    return is_null($field) ? $list[$id] : $list[$id][$field];
+
+    /* 根据条件返回数据 */
+    if(is_null($id)){
+        return $list;
+    } elseif(is_null($field)){
+        return $list[$id];
+    } else {
+        return $list[$id][$field];
+    }
 }
 
 /* 根据ID获取分类标识 */
@@ -493,6 +501,24 @@ function get_category_name($id){
 /* 根据ID获取分类名称 */
 function get_category_title($id){
     return get_category($id, 'title');
+}
+
+/**
+ *  根据名称获取分类ID
+ * @author ximenpo <ximenpo@jiandan.ren>
+ */
+function get_category_id($category_name){
+    if(empty($category_name)){
+        return false;
+    }
+
+    $categorys = get_category();
+    foreach ($categorys as $key => $value) {
+        if($value['name'] == $category_name){
+            return  $key;
+        }
+    }
+    return  false;
 }
 
 /**
@@ -1021,14 +1047,16 @@ function check_category_model($info){
  * 根据文档字段生成枚举选项
  * @param mixed $value 条件，可用常量或者数组
  * @param string $condition 条件字段
- * @param string $field 需要返回的字段，不传则返回整个数据
+ * @param string $key_field 实际值字段
+ * @param string $display_field 显示值字段
+ * @param string $table     表名（不含前缀）
  *
  * @author ximenpo <ximenpo@jiandan.ren>
  */
-function get_enum_options_by_document_field($value = null, $condition = 'id', $key_field = null, $display_field = null){
+function get_enum_options_by_table_field($value = null, $condition = 'id', $key_field = null, $display_field = null, $table='Document'){
     //拼接参数
     $map[$condition] = $value;
-    $info = M('Document')->where($map);
+    $info = M($table)->where($map);
     if(empty($display_field)){
         $info = $info->field("`{$key_field}` as k, `{$key_field}` as v")->select();
     }else{
