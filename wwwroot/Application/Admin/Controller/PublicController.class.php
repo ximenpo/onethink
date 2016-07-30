@@ -21,9 +21,19 @@ class PublicController extends \Think\Controller {
      * @author 麦当苗儿 <zuojiazi@vip.qq.com>
      */
     public function login($username = null, $password = null, $verify = null){
+        {
+            /* 读取数据库中的配置 */
+            $config	=	S('DB_CONFIG_DATA');
+            if(!$config){
+                $config	=	D('Config')->lists();
+                S('DB_CONFIG_DATA',$config);
+            }
+            C($config); //添加配置
+        }
+
         if(IS_POST){
             /* 检测验证码 TODO: */
-            if(!check_verify($verify)){
+            if(C('ADMIN_LOGIN_WITH_VERIFYIMG', null, true) && !check_verify($verify)){
                 $this->error('验证码输入错误！');
             }
 
@@ -52,14 +62,6 @@ class PublicController extends \Think\Controller {
             if(is_login()){
                 $this->redirect('Index/index');
             }else{
-                /* 读取数据库中的配置 */
-                $config	=	S('DB_CONFIG_DATA');
-                if(!$config){
-                    $config	=	D('Config')->lists();
-                    S('DB_CONFIG_DATA',$config);
-                }
-                C($config); //添加配置
-                
                 $this->display();
             }
         }
