@@ -86,7 +86,7 @@
                             <case value="checkbox">
                                 <volist name=":parse_field_attr($field['extra'])" id="vo">
                                 	<label class="checkbox">
-                                    <input type="checkbox" value="{$key}" name="{$field.name}[]" <if condition="check_document_position($data[$field['name']],$key)">checked="checked"</if>>{$vo}
+                                    <input type="checkbox" value="{$key}" name="{$field.name}[]" <in name="key" value="$data[$field['name']]" >checked="checked"</in>>{$vo}
                                 	</label>
                                 </volist>
                             </case>

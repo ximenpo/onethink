@@ -60,7 +60,7 @@ class AdminController extends Controller {
                     }
                 }
             }
-        }        
+        }
 
         $this->assign('__MENU__', $this->getMenus());
     }
@@ -444,11 +444,25 @@ class AdminController extends Controller {
                     if(isset($attrList[$key])){
                         $extra      =   $attrList[$key]['extra'];
                         $type       =   $attrList[$key]['type'];
-                        if('select'== $type || 'checkbox' == $type || 'radio' == $type || 'bool' == $type) {
-                            // 枚举/多选/单选/布尔型
+                        if('select'== $type || 'radio' == $type || 'bool' == $type) {
+                            // 枚举/单选/布尔型
                             $options    =   parse_field_attr($extra);
                             if($options && array_key_exists($val,$options)) {
                                 $data[$key]    =   $options[$val];
+                            }
+                        }elseif('checkbox'==$type){ // 多选
+                            $options    =   parse_field_attr($extra);
+                            $val_items  =   str2arr($val);
+                            if($options && count($options) > 0){
+                                $data[$key] = '';
+                                foreach ($val_items as $n => $val_item) {
+                                    if(array_key_exists($val_item,$options)) {
+                                        if(!empty($data[$key])){
+                                            $data[$key]    .=   ',';
+                                        }
+                                        $data[$key]    .=   $options[$val_item];
+                                    }
+                                }
                             }
                         }elseif('date'==$type){ // 日期型
                             $data[$key]    =   date('Y-m-d',$val);
