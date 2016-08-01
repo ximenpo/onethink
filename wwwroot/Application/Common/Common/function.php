@@ -910,13 +910,13 @@ function api($name,$vars=array()){
  * @author huajie <banhuajie@163.com>
  */
 function get_table_field($value = null, $condition = 'id', $field = null, $table = null){
-    if(empty($value) || empty($table)){
+    if(empty($value)){
         return false;
     }
 
     //拼接参数
     $map[$condition] = $value;
-    $info = M(ucfirst($table))->where($map);
+    $info = M(ucfirst(empty($table)?'Document':$table))->where($map);
     if(empty($field)){
         $info = $info->field(true)->find();
     }else{
@@ -1053,7 +1053,7 @@ function check_category_model($info){
  *
  * @author ximenpo <ximenpo@jiandan.ren>
  */
-function get_enum_options_by_table_field($value = null, $condition = 'id', $key_field = null, $display_field = null, $table='Document'){
+function get_field_options_by_table_field($value = null, $condition = 'id', $key_field = null, $display_field = null, $table='Document'){
     //拼接参数
     $map[$condition] = $value;
     $info = M($table)->where($map);
@@ -1092,4 +1092,60 @@ function get_model_id($model_name){
         }
     }
     return  false;
+}
+
+/**
+ * 根据模型名获取对应的模型ID
+ * @param int $model_id 模型ID
+ * @param string $value 条件字段
+ * @param string $condition 条件字段
+ * @param mixed $fields 返回字段
+ * @return array of field  false:error
+ * @author ximenpo <ximenpo@jiandan.ren>
+ */
+function get_model_data($model_id, $value=null, $condition='id', $fields=null){
+    if(empty($value)){
+        return false;
+    }
+
+    $model = get_document_model($model_id);
+    if(!$model){
+        return  false;
+    }
+
+    //拼接参数
+    $map[$condition] = $value;
+
+    //独立模型
+    if($model['extend'] == 0){
+        $data = M($model['name'])->where($map);
+        if(!empty($fields)){
+            $data = $data->field($fields);
+        }
+        return $data->select();
+    }
+
+    //文档模型
+    $name   = get_table_name($model['id']);
+    $parent = get_table_name($model['extend']);
+    $fix    = C("DB_PREFIX");
+
+    if(is_array($fields)){
+        $key = array_search('id', $fields);
+        if(false === $key){
+            array_push($fields, "{$fix}{$parent}.id as id");
+        } else {
+            $fields[$key] = "{$fix}{$parent}.id as id";
+        }
+    }
+
+    // 查询数据
+    $data   = M($parent)
+        ->join("INNER JOIN {$fix}{$name} ON {$fix}{$parent}.id = {$fix}{$name}.id")
+        ->field(empty($fields) ? true : $fields)
+        ->where($map)
+        ->order("{$fix}{$parent}.id")
+        ->select();
+
+    return  $data;
 }
