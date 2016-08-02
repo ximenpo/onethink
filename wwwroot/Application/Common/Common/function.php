@@ -576,6 +576,32 @@ function get_document_model($id = null, $field = null){
 }
 
 /**
+ * 获取文档的名字／标识
+ * @param string 文档id
+ * @return string 指定文档的name
+ * @author ximenpo <ximenpo@jiandan.ren>
+ */
+function get_document_name($id){
+    if(!is_numeric($id)){
+        return '';
+    }
+    return  get_table_field($id, 'id', 'name');
+}
+
+/**
+ * 获取文档的标题
+ * @param string 文档id
+ * @return string 指定文档的title
+ * @author ximenpo <ximenpo@jiandan.ren>
+ */
+function get_document_title($id){
+    if(!is_numeric($id)){
+        return '';
+    }
+    return  get_table_field($id, 'id', 'title');
+}
+
+/**
  * 解析UBB数据
  * @param string $data UBB字符串
  * @return string 解析为HTML的数据
