@@ -9,6 +9,7 @@
 
 namespace Admin\Controller;
 use User\Api\UserApi;
+use Admin\Model\AuthRuleModel;
 
 /**
  * 后台首页控制器
@@ -45,7 +46,24 @@ class PublicController extends \Think\Controller {
                 $Member = D('Member');
                 if($Member->login($uid)){ //登录用户
                     //TODO:跳转到登录前页面
-                    $this->success('登录成功！', U('Index/index'));
+                    $url_redirect   = U('Index/index');
+                    if(!is_administrator($uid)){
+                        eval('namespace Admin\Controller;
+                        class AuthHack extends \Think\Auth{
+                            public function getAuthList($uid, $type){
+                                return   parent::getAuthList($uid, $type);
+                            }
+                        }');
+                        $Auth   =   new AuthHack();
+                        if(!$Auth->check(MODULE_NAME.'/Index/index', $uid)){
+                            $authlist   = $Auth->getAuthList($uid, AuthRuleModel::RULE_MAIN);
+                            empty($authlist)    or ($authlist   = $Auth->getAuthList($uid, AuthRuleModel::RULE_URL));
+                            if(!empty($authlist)){
+                                $url_redirect   = U(str_ireplace(MODULE_NAME.'/', '', $authlist[0]));
+                            }
+                        }
+                    }
+                    $this->success('登录成功！', $url_redirect);
                 } else {
                     $this->error($Member->getError());
                 }
