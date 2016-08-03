@@ -14,7 +14,14 @@
             "drag"      : true,
             "name"      : '__thinkbox_iframe'
         }),
+        "clear"     : function(){
+            var frm	= __thinkbox_iframe.iframe.find('iframe')[0];
+            if(frm && frm.contentWindow){
+                frm.contentWindow.document.write('');
+            }
+        },
         "post"      : function(url, args){
+            __thinkbox_iframe.clear();
             var form = $('<form method="post" target="__thinkbox_iframe" style="display:none"></form>');
             form.attr({"action":url});
             $.each(args.split('&'), function(n, value){
@@ -30,6 +37,7 @@
             return  __thinkbox_iframe;
         },
         "navigate"  : function(url){
+            __thinkbox_iframe.clear();
             __thinkbox_iframe.iframe.find('iframe').attr('src', url);
             return  __thinkbox_iframe;
         },
