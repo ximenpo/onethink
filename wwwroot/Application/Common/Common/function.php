@@ -1175,3 +1175,13 @@ function get_model_data($model_id, $value=null, $condition='id', $fields=null){
 
     return  $data;
 }
+
+/**
+ * empty的反义
+ * @param int $val 要判断的数据
+ * @return true/false  !empty($val)
+ * @author ximenpo <ximenpo@jiandan.ren>
+ */
+function not_empty($val = null){
+    return  !empty($val);
+}

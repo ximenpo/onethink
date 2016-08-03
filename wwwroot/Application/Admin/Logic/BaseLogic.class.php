@@ -103,7 +103,7 @@ class BaseLogic extends Model {
             }
             // 自动验证规则
             if(!empty($attr['validate_rule'])) {
-                $validate[]  =  array($attr['name'],$attr['validate_rule'],$attr['error_info']?$attr['error_info']:$attr['title'].'验证错误',0,$attr['validate_type'],$attr['validate_time']);
+                $validate[]  =  array($attr['name'],$attr['validate_rule'],$attr['error_info']?$attr['error_info']:$attr['title'].'验证错误',self::MUST_VALIDATE,$attr['validate_type'],$attr['validate_time']);
             }
             // 自动完成规则
             if(!empty($attr['auto_rule'])) {
