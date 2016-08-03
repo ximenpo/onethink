@@ -8,6 +8,7 @@
 // +----------------------------------------------------------------------
 
 namespace Admin\Controller;
+use Think\Model;
 
 /**
  * 模型数据管理控制器
@@ -165,7 +166,7 @@ class ThinkController extends AdminController {
     public function setStatus($model='Document'){
         return parent::setStatus($model);
     }
-    
+
     public function edit($model = null, $id = 0){
         //获取模型信息
         $model = M('Model')->find($model);
@@ -224,7 +225,11 @@ class ThinkController extends AdminController {
         $validate   =   $auto   =   array();
         foreach($fields as $key=>$attr){
             if($attr['is_must']){// 必填字段
-                $validate[]  =  array($attr['name'],'require',$attr['title'].'必须!');
+                if('checkbox'==$attr['type']){ // 多选型
+                    $validate[] = array($attr['name'],'not_empty',$attr['title'].'必须!',Model::MUST_VALIDATE, 'function', Model::MODEL_BOTH);
+                }else{
+                    $validate[] = array($attr['name'],'require',$attr['title'].'必须!',Model::MUST_VALIDATE, 'regex', Model::MODEL_BOTH);
+                }
             }
             // 自动验证规则
             if(!empty($attr['validate_rule'])) {

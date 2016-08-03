@@ -99,7 +99,11 @@ class BaseLogic extends Model {
         $validate   =   $auto   =   array();
         foreach($fields as $key=>$attr){
             if($attr['is_must']){// 必填字段
-                $validate[]  =  array($attr['name'],'require',$attr['title'].'必须!',self::MUST_VALIDATE , 'regex', self::MODEL_BOTH);
+                if('checkbox'==$attr['type']){ // 多选型
+                    $validate[] = array($attr['name'],'not_empty',$attr['title'].'必须!',self::MUST_VALIDATE, 'function', self::MODEL_BOTH);
+                }else{
+                    $validate[] = array($attr['name'],'require',$attr['title'].'必须!',self::MUST_VALIDATE, 'regex', self::MODEL_BOTH);
+                }
             }
             // 自动验证规则
             if(!empty($attr['validate_rule'])) {
