@@ -12,15 +12,15 @@ use User\Api\UserApi;
 use Admin\Model\AuthRuleModel;
 
 /**
- * 后台首页控制器
- * @author 麦当苗儿 <zuojiazi@vip.qq.com>
- */
+* 后台首页控制器
+* @author 麦当苗儿 <zuojiazi@vip.qq.com>
+*/
 class PublicController extends \Think\Controller {
 
     /**
-     * 后台用户登录
-     * @author 麦当苗儿 <zuojiazi@vip.qq.com>
-     */
+    * 后台用户登录
+    * @author 麦当苗儿 <zuojiazi@vip.qq.com>
+    */
     public function login($username = null, $password = null, $verify = null){
         {
             /* 读取数据库中的配置 */
@@ -33,15 +33,25 @@ class PublicController extends \Think\Controller {
         }
 
         if(IS_POST){
-            /* 检测验证码 TODO: */
-            if(C('ADMIN_LOGIN_WITH_VERIFYIMG', null, true) && !check_verify($verify)){
-                $this->error('验证码输入错误！');
+            switch(C('ADMIN_LOGIN_VERIFY', null, 1)){
+                case 1:
+                if(!check_verify($verify)){
+                    $this->error('验证码输入错误！');
+                }
+                break;
             }
 
             /* 调用UC登录接口登录 */
             $User = new UserApi;
             $uid = $User->login($username, $password);
             if(0 < $uid){ //UC登录成功
+                switch(C('ADMIN_LOGIN_VERIFY', null, 1)){
+                    case 2:
+                    if(!check_verify_2FA($verify, $uid)){
+                        $this->error('动态验证码输入错误！');
+                    }
+                    break;
+                }
                 /* 登录用户 */
                 $Member = D('Member');
                 if($Member->login($uid)){ //登录用户
