@@ -33,25 +33,24 @@ class PublicController extends \Think\Controller {
         }
 
         if(IS_POST){
+            /* 调用UC登录接口登录 */
+            $User = new UserApi;
+
             switch(C('ADMIN_LOGIN_VERIFY', null, 1)){
                 case 1:
                 if(!check_verify($verify)){
                     $this->error('验证码输入错误！');
                 }
                 break;
+                case 2:
+                if(!$User->verifyTFA($username, $verify, true)){
+                    $this->error('动态验证码输入错误！');
+                }
+                break;
             }
 
-            /* 调用UC登录接口登录 */
-            $User = new UserApi;
             $uid = $User->login($username, $password);
             if(0 < $uid){ //UC登录成功
-                switch(C('ADMIN_LOGIN_VERIFY', null, 1)){
-                    case 2:
-                    if(!$User->verify2FA($uid, $verify)){
-                        $this->error('动态验证码输入错误！');
-                    }
-                    break;
-                }
                 /* 登录用户 */
                 $Member = D('Member');
                 if($Member->login($uid)){ //登录用户

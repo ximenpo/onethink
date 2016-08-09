@@ -266,11 +266,16 @@ class UcenterMemberModel extends Model{
 	 *  验证动态密码
 	 * @param  integer $uid 用户id
 	 * @param  integer $code 验证码
+     * @param  boolean $is_username 是否使用用户名查询
 	 * @return boolean     检测结果
 	 * @author ximenpo <ximenpo@jiandan.ren>
 	 */
-	public function verify2FA($uid, $code){
-		$seed   = $this->getFieldById($uid, 'tfa_seed');
+	public function verifyTFA($uid, $code, $is_username = false){
+		if($is_username){
+			$seed   = $this->getFieldByUsername($uid, 'tfa_seed');
+		}else{
+			$seed   = $this->getFieldById($uid, 'tfa_seed');
+		}
 		if(empty($seed)){
 			return  false;
 		}
