@@ -36,7 +36,7 @@ class PublicController extends \Think\Controller {
             /* 调用UC登录接口登录 */
             $User = new UserApi;
 
-            switch(C('ADMIN_LOGIN_VERIFY', null, 1)){
+            switch(C('ADMIN_LOGIN_EXTRA_VERIFY', null, 1)){
                 case 1:
                 if(!check_verify($verify)){
                     $this->error('验证码输入错误！');
