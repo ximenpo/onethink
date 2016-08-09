@@ -302,22 +302,6 @@ function check_verify($code, $id = 1){
 }
 
 /**
- * 检测动态验证码
- * @param  integer $uid 用户id
- * @return boolean     检测结果
- * @author ximenpo <ximenpo@jiandan.ren>
- */
-function check_verify_2FA($code, $uid){
-    vendor('Google2FA');
-    $verify = new \Google2FA();
-    $seed   = M('UcenterMember')->field('tfa_seed')->getById($uid);
-    if(empty($seed)){
-        return  false;
-    }
-    return $verify->verify_key($seed['tfa_seed'], $code);
-}
-
-/**
  * 获取当前分类的文档类型
  * @param int $id
  * @return array 文档类型数组

@@ -53,6 +53,17 @@ class UserApi extends Api{
     }
 
     /**
+     *  验证动态密码
+     * @param  integer $uid 用户id
+     * @param  integer $code 验证码
+     * @return boolean     检测结果
+     * @author ximenpo <ximenpo@jiandan.ren>
+     */
+    public function verify2FA($uid, $code){
+        return $this->model->verify2FA($uid, $code);
+    }
+
+    /**
      * 检测用户名
      * @param  string  $field  用户名
      * @return integer         错误编号

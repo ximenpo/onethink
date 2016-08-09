@@ -47,7 +47,7 @@ class PublicController extends \Think\Controller {
             if(0 < $uid){ //UC登录成功
                 switch(C('ADMIN_LOGIN_VERIFY', null, 1)){
                     case 2:
-                    if(!check_verify_2FA($verify, $uid)){
+                    if(!$User->verify2FA($uid, $verify)){
                         $this->error('动态验证码输入错误！');
                     }
                     break;

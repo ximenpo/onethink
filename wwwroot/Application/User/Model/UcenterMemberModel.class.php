@@ -262,4 +262,22 @@ class UcenterMemberModel extends Model{
 		return false;
 	}
 
+	/**
+	 *  验证动态密码
+	 * @param  integer $uid 用户id
+	 * @param  integer $code 验证码
+	 * @return boolean     检测结果
+	 * @author ximenpo <ximenpo@jiandan.ren>
+	 */
+	public function verify2FA($uid, $code){
+		$seed   = $this->getFieldById($uid, 'tfa_seed');
+		if(empty($seed)){
+			return  false;
+		}
+
+		vendor('Google2FA');
+		$verify = new \Google2FA();
+		return $verify->verify_key($seed, $code);
+	}
+
 }
