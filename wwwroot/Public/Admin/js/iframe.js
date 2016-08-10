@@ -58,8 +58,8 @@ var __thinkbox_iframe   = {
         //      iframe_get      use iframe to display url
         //      confirm         confirm operation
         //
-        var target = $(this).attr('url');
-        if(!target){
+        var target;
+        if(!(target = $(this).attr('url')) && !(target = $(this).attr('href'))){
             return  false;
         }
 
@@ -71,6 +71,7 @@ var __thinkbox_iframe   = {
         }
 
         __thinkbox_iframe.navigate(target).show($(this).attr('title'));
+        return false;
     });
 
     //iframe post请求
@@ -86,8 +87,8 @@ var __thinkbox_iframe   = {
         //      confirm         confirm operation
         //
         var that = this;
-        var target  = $(this).attr('url');
-        if(!target){
+        var target;
+        if(!(target = $(this).attr('url')) && !(target = $(this).attr('href'))){
             return  false;
         }
 
@@ -142,5 +143,6 @@ var __thinkbox_iframe   = {
         }
 
         __thinkbox_iframe.post(target, query).show($(this).attr('title'));
+        return  false;
     });
 });
