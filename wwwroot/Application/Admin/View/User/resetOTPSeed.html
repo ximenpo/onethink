@@ -58,13 +58,21 @@
     .login-form .icon-login-verifycode {
         background-position: -24px 0;
     }
+    .check-tips {
+        height: 32px;
+        line-height: 32px;
+    }
+    .x-title {
+        height: 32px;
+        line-height: 32px;
+    }
     </style>
 </head>
 <body>
     <div id="main-content">
         <div id="itemBox" class="item-box">
 
-            <div class="item alert-success">用户 {$username} (id:{$userid}) 的密钥已更新</div>
+            <div class="item alert-info x-title">用户 {$username} (id:{$userid}) 的密钥已更新</div>
 
             <form action="{:U('','uid='.$userid)}" method="post" class="login-form">
                 <p class="item">
@@ -113,7 +121,10 @@
         return false;
 
         function success(data){
-            $(".check-tips").text(data.msg);
+            $(".check-tips")
+            .removeClass('alert-success alert-error')
+            .addClass((data.status?'alert-success':'alert-error'))
+            .text(data.msg);
         }
     });
 
