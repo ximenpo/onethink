@@ -60,8 +60,18 @@ class UserApi extends Api{
      * @return boolean     检测结果
      * @author ximenpo <ximenpo@jiandan.ren>
      */
-    public function verifyTFA($uid, $code, $is_username = false){
-        return $this->model->verifyTFA($uid, $code, $is_username);
+    public function verifyOTP($uid, $code, $is_username = false){
+        return $this->model->verifyOTP($uid, $code, $is_username);
+    }
+
+    /**
+     *  重置动态密码的密钥
+     * @param  integer $uid 用户id
+     * @return 新生成的Seed（失败为空）
+     * @author ximenpo <ximenpo@jiandan.ren>
+     */
+    public function resetOTPSeed($uid){
+        return  $this->model->resetOTPSeed($uid);
     }
 
     /**
@@ -101,23 +111,6 @@ class UserApi extends Api{
      */
     public function updateInfo($uid, $password, $data){
         if($this->model->updateUserFields($uid, $password, $data) !== false){
-            $return['status'] = true;
-        }else{
-            $return['status'] = false;
-            $return['info'] = $this->model->getError();
-        }
-        return $return;
-    }
-
-    /**
-     *  验证动态密码
-     * @param  integer $uid 用户id
-     * @param  integer $seed 验证码
-     * @return true 修改成功，false 修改失败
-     * @author ximenpo <ximenpo@jiandan.ren>
-     */
-    public function update2FASeed($uid, $seed){
-        if($this->model->updateUserFields($uid, 'tfa_seed', $seed) !== false){
             $return['status'] = true;
         }else{
             $return['status'] = false;

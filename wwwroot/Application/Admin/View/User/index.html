@@ -55,6 +55,7 @@
 				<a href="{:U('User/changeStatus?method=resumeUser&id='.$vo['uid'])}" class="ajax-get">启用</a>
 				</eq>
 				<a href="{:U('AuthManager/group?uid='.$vo['uid'])}" class="authorize">授权</a>
+				<a href="{:U('User/resetOTPSeed?uid='.$vo['uid'])}" class="confirm iframe-get" title="重置动态密码">重置动态密码</a>
                 <a href="{:U('User/changeStatus?method=deleteUser&id='.$vo['uid'])}" class="confirm ajax-get">删除</a>
                 </td>
 		</tr>
@@ -72,6 +73,7 @@
 
 <block name="script">
 	<script src="__STATIC__/thinkbox/jquery.thinkbox.js"></script>
+	<script type="text/javascript"  src="__JS__/iframe.js"></script>
 
 	<script type="text/javascript">
 	//搜索功能
@@ -97,4 +99,14 @@
     //导航高亮
     highlight_subnav('{:U('User/index')}');
 	</script>
+</block>
+
+<block name="style">
+	<link rel="stylesheet" type="text/css" href="__CSS__/iframe.css" media="all">
+	<style>
+	.thinkbox{
+		width:260pt;
+		height:360pt;
+	}
+	</style>
 </block>

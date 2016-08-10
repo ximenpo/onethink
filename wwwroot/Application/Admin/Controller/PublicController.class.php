@@ -43,7 +43,7 @@ class PublicController extends \Think\Controller {
                 }
                 break;
                 case 2:
-                if(!$User->verifyTFA($username, $verify, true)){
+                if(!$User->verifyOTP($username, $verify, true)){
                     $this->error('动态验证码输入错误！');
                 }
                 break;

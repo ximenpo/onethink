@@ -270,11 +270,11 @@ class UcenterMemberModel extends Model{
 	 * @return boolean     检测结果
 	 * @author ximenpo <ximenpo@jiandan.ren>
 	 */
-	public function verifyTFA($uid, $code, $is_username = false){
+	public function verifyOTP($uid, $code, $is_username = false){
 		if($is_username){
-			$seed   = $this->getFieldByUsername($uid, 'tfa_seed');
+			$seed   = $this->getFieldByUsername($uid, 'otp_seed');
 		}else{
-			$seed   = $this->getFieldById($uid, 'tfa_seed');
+			$seed   = $this->getFieldById($uid, 'otp_seed');
 		}
 		if(empty($seed)){
 			return  false;
@@ -283,6 +283,29 @@ class UcenterMemberModel extends Model{
 		vendor('Google2FA');
 		$verify = new \Google2FA();
 		return $verify->verify_key($seed, $code);
+	}
+
+	/**
+	*  重置动态密码的密钥
+	* @param  integer $uid 用户id
+	* @return 新生成的Seed（失败为空）
+	* @author ximenpo <ximenpo@jiandan.ren>
+	*/
+	public function resetOTPSeed($uid){
+		vendor('Google2FA');
+		$verify = new \Google2FA();
+
+		$seed   = $verify->generate_secret_key();
+
+		$data = array(
+			'id'		=> $uid,
+			'otp_seed' 	=> $seed,
+		);
+		if($this->save($data)){
+			return  $seed;
+		}
+
+		return '';
 	}
 
 }

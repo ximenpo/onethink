@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>重置动态密码</title>
+    <link rel="stylesheet" type="text/css" href="__CSS__/{$Think.config.COLOR_STYLE}.css" media="all">
+    <link rel="stylesheet" type="text/css" href="__CSS__/common.css" media="all">
+    <style>
+    html,body {
+        font-size: 14px;
+        font-family: "微软雅黑", Helvetica, Tahoma, Arial, sans-serif;
+        color: #000;
+        //background-color: #30333F;
+        margin: 0;
+        padding: 0;
+    }
+    input {
+        padding: 8px 0;
+        width: 220px;
+        height: 22px;
+        line-height: 22px;
+        font-size: 16px;
+        font-family: "微软雅黑", arial, sans-serif;
+        vertical-align: middle;
+        border: 0 none;
+        background-color: #fff;
+        outline: 0;
+        resize: none;
+        color:#686868;
+        *padding: 7px 0;
+    }
+    .placeholder_copy {
+        display: none;
+        position: absolute;
+        left: 48px;
+        font-size: 16px;
+        color: #ADADAD;
+    }
+    .placeholder_un {
+        top: 13px;
+    }
+    .login-form .icon-login-user,
+    .login-form .icon-login-pwd,
+    .login-form .icon-login-verifycode {
+        display: inline-block;
+        margin-right: 6px;
+        width: 24px;
+        height: 24px;
+        vertical-align: middle;
+        background: url("__CSS__/../images/icon24_login.png") no-repeat;
+    }
+    .login-form .icon-login-user {
+        background-position: 0 0;
+    }
+    .login-form .icon-login-pwd {
+        background-position: -48px 0;
+    }
+    .login-form .icon-login-verifycode {
+        background-position: -24px 0;
+    }
+    </style>
+</head>
+<body>
+    <div id="main-content">
+        <div id="itemBox" class="item-box">
+
+            <div class="item alert-success">用户 {$username} (id:{$userid}) 的密钥已更新</div>
+
+            <form action="{:U('','uid='.$userid)}" method="post" class="login-form">
+                <p class="item">
+                    <center>
+                        <div id="qrimg" alt="密钥二维码"></div>
+                    </center>
+                </p>
+
+                <p class="item">
+                    <i class="icon-login-pwd"></i>
+                    <input type="text" name="trf_seed" value="{$otp_seed}" readonly />
+                </p>
+
+                <p class="item b0">
+                    <i class="icon-login-verifycode"></i>
+                    <input type="text" name="trf_code" placeholder="动态密码" autocomplete="off" />
+                    <a class="verify" title="验证输入的动态密码" href="javascript:void(0)">验 证</a>
+                </p>
+                <span class="placeholder_copy placeholder_pwd">动态密码</span>
+            </form>
+            <div class="check-tips"></div>
+        </div>
+    </div>
+    <canvas id="Canvas" style="display:none"></canvas>
+
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="__STATIC__/jquery-1.10.2.min.js"></script>
+    <![endif]-->
+    <!--[if gte IE 9]><!-->
+    <script type="text/javascript" src="__STATIC__/jquery-2.0.3.min.js"></script>
+    <!--<![endif]-->
+    <script type="text/javascript" src="__STATIC__/jquery.qrcode.min.js"></script>
+    <script type="text/javascript">
+
+    /* 控件获取焦点变色 */
+    $("#itemBox").on("focus", "input", function(){
+        $(this).closest('.item').addClass('focus');
+    }).on("blur","input",function(){
+        $(this).closest('.item').removeClass('focus');
+    });
+
+    //表单提交
+    $(".verify").click(function(){
+        var self = $("form");
+        $.post(self.attr("action"), self.serialize(), success, "json");
+        return false;
+
+        function success(data){
+            $(".check-tips").text(data.msg);
+        }
+    });
+
+    $(function(){
+        //初始焦点
+        $("#itemBox").find("input[name=trf_code]").focus();
+
+        //placeholder兼容性
+        //如果支持
+        function isPlaceholer(){
+            var input = document.createElement('input');
+            return "placeholder" in input;
+        }
+        //如果不支持
+        if(!isPlaceholer()){
+            $(".placeholder_copy").css({
+                display:'block'
+            })
+            $("#itemBox input").keydown(function(){
+                $(this).parents(".item").next(".placeholder_copy").css({
+                    display:'none'
+                })
+            })
+            $("#itemBox input").blur(function(){
+                if($(this).val()==""){
+                    $(this).parents(".item").next(".placeholder_copy").css({
+                        display:'block'
+                    })
+                }
+            })
+        }
+
+        // 二维码
+		$('#qrimg').html('');
+        var qrval   = 'otpauth://totp/'+window.location.host+'?secret='+$('input[name=trf_seed]').val();
+		if (document.getElementById("Canvas").getContext){
+			$('#qrimg').qrcode(qrval);
+		}else{
+			$('#qrimg').qrcode({
+				render:     "table",
+				text:       qrval
+			});
+		}
+    });
+    </script>
+</body>
+</html>

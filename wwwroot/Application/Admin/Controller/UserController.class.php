@@ -118,6 +118,36 @@ class UserController extends AdminController {
     }
 
     /**
+     * 重设动态密码
+	 * @author ximenpo <ximenpo@jiandan.ren>
+     */
+    public function resetOTPSeed($uid){
+        $this->meta_title = '重置动态密码';
+        $verify = I('post.verify');
+
+        $User   = new UserApi();
+
+        $uid    = intval($uid);
+        if(IS_POST){
+            $code       = I('post.trf_code');
+            $success    = !empty($code);
+            if($success){
+                $success    = $User->verifyOTP($uid, $code);
+            }
+            $this->ajaxReturn(['status'=>($success?1:0),'msg'=>($success?'验证成功':'验证失败')]);
+        }else{
+            $info   = $User->info($uid);
+            empty($info) && $this->error('用户不存在');
+
+            $this->assign('userid', $uid);
+            $this->assign('username', M('UcenterMember')->getFieldById($uid, 'username'));
+            $this->assign('otp_seed', $User->resetOTPSeed($uid));
+
+            $this->display();
+        }
+    }
+
+    /**
      * 用户行为列表
      * @author huajie <banhuajie@163.com>
      */
