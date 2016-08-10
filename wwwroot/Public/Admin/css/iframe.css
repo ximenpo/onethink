@@ -21,12 +21,12 @@
     position        : relative;
     z-index         : 1;
     top             : -6px;
-    height          : 22px;
+    height          : 23px;
 }
 
 .thinkbox-default .thinkbox-body{
     height          : 100%;
     width           : 100%;
-    padding-top     : 23px;
-    top             : -23px;
+    padding-top     : 20px;
+    top             : -25px;
 }
