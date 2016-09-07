@@ -100,10 +100,10 @@ class UcenterMemberModel extends Model{
 	 */
 	public function register($username, $password, $email, $mobile){
 		$data = array(
-			'username' => $username,
-			'password' => $password,
-			'email'    => $email,
-			'mobile'   => $mobile,
+			'username' => strval($username),
+			'password' => strval($password),
+			'email'    => strval($email),
+			'mobile'   => strval($mobile),
 		);
 
 		//验证手机
@@ -129,16 +129,16 @@ class UcenterMemberModel extends Model{
 		$map = array();
 		switch ($type) {
 			case 1:
-				$map['username'] = $username;
+				$map['username'] = strval($username);
 				break;
 			case 2:
-				$map['email'] = $username;
+				$map['email'] = strval($username);
 				break;
 			case 3:
-				$map['mobile'] = $username;
+				$map['mobile'] = strval($username);
 				break;
 			case 4:
-				$map['id'] = $username;
+				$map['id'] = strval($username);
 				break;
 			default:
 				return 0; //参数错误
