@@ -64,9 +64,8 @@ class PublicController extends \Think\Controller {
                             }
                         }');
                         $Auth   =   new AuthHack();
-                        if(!$Auth->check(MODULE_NAME.'/Index/index', $uid)){
-                            $authlist   = $Auth->getAuthList($uid, AuthRuleModel::RULE_MAIN);
-                            empty($authlist)    or ($authlist   = $Auth->getAuthList($uid, AuthRuleModel::RULE_URL));
+                        if(!$Auth->check(MODULE_NAME.'/Index/index', $uid, C('AUTH_CONFIG.AUTH_TYPE'))){
+                            $authlist   = $Auth->getAuthList($uid, C('AUTH_CONFIG.AUTH_TYPE'));
                             if(!empty($authlist)){
                                 $url_redirect   = U(str_ireplace(MODULE_NAME.'/', '', $authlist[0]));
                             }
