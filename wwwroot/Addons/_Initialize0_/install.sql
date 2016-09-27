@@ -4,7 +4,7 @@ INSERT INTO     `onethink_config` VALUES (NULL, 'ADMIN_SITE_LOGO', '1', '后台L
 INSERT INTO     `onethink_config` VALUES (NULL, 'ADMIN_LOGIN_LOGO', '1', '后台登录LOGO', '5', '', '后台登录页面LOGO的URL', '1387165685', '1387165685', '1', '', '0');
 INSERT INTO     `onethink_config` VALUES (NULL, 'ADMIN_LOGIN_EXTRA_VERIFY', '4', '后台登录附加验证', '5', '0:无\r\n1:图片验证码\r\n2:一次性密码（Google Authenticator）', '后台登录使用的附加验证方式', '1383105995', '1383291877', '1', '1', '0');
 INSERT INTO     `onethink_config` VALUES (NULL, 'ADMIN_SHOW_COPYRIGHT', '4', '是否显示OneThink版权信息', '5', '0:关闭\r\n1:开启', '是否显示OneThink版权信息', '1383105995', '1383291877', '1', '1', '0');
-INSERT INTO     `onethink_config` VALUES (NULL, 'OPEN_MY_DOCUMENT', '4', '是否开启我的文档', '2', '0:关闭\r\n1:开启', '是否显示我的文档功能', '1383105995', '1383291877', '1', '1', '0');
-INSERT INTO     `onethink_config` VALUES (NULL, 'OPEN_RECYCLE', '4', '是否开启回收站', '2', '0:关闭\r\n1:开启', '是否显示回收站功能', '1383105995', '1383291877', '1', '1', '0');
+INSERT INTO     `onethink_config` VALUES (NULL, 'OPEN_MY_DOCUMENT', '4', '是否开启我的文档功能', '2', '0:关闭我的文档\r\n1:开启我的文档', '是否显示我的文档功能', '1383105995', '1383291877', '1', '1', '0');
+INSERT INTO     `onethink_config` VALUES (NULL, 'OPEN_RECYCLE', '4', '是否开启回收站功能', '2', '0:关闭回收站\r\n1:开启回收站', '是否显示回收站功能', '1383105995', '1383291877', '1', '1', '0');
 
 ALTER TABLE     `onethink_ucenter_member` ADD COLUMN `otp_seed` VARCHAR(32) NOT NULL DEFAULT '' COMMENT 'one-time password seed' AFTER `mobile`;
