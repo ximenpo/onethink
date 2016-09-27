@@ -20,6 +20,19 @@ class InstallController extends Controller{
         }
     }
 
+    private function T($view = null){
+        if(empty($view)){
+            $view   = ACTION_NAME;
+        }
+
+        $replace_path   = T('_' . $view);
+        if (file_exists($replace_path)) {
+            return  $replace_path;
+        } else {
+            return  T($view);
+        }
+    }
+
     //安装第一步，检测运行所需的环境设置
     public function step1(){
         session('error', false);
@@ -40,7 +53,8 @@ class InstallController extends Controller{
 
         $this->assign('env', $env);
         $this->assign('func', $func);
-        $this->display();
+
+        $this->display($this->T());
     }
 
     //安装第二步，创建数据库
@@ -82,7 +96,7 @@ class InstallController extends Controller{
         } else {
             if(session('update')){
                 session('step', 2);
-                $this->display('update');
+                $this->display($this->T('update'));
             }else{
                 session('error') && $this->error('环境检测没有通过，请调整环境后重试！');
 
@@ -92,7 +106,7 @@ class InstallController extends Controller{
                 }
 
                 session('step', 2);
-                $this->display();
+                $this->display($this->T());
             }
         }
     }
@@ -103,7 +117,7 @@ class InstallController extends Controller{
             $this->redirect('step2');
         }
 
-        $this->display();
+        $this->display($this->T());
 
         if(session('update')){
             $db = Db::getInstance();
@@ -140,7 +154,7 @@ class InstallController extends Controller{
             $this->redirect('step2');
         }
 
-        $this->display('step3');
+        $this->display($this->T('step3'));
 
         //执行初始化插件
         if(!install_initialize_addons()){
