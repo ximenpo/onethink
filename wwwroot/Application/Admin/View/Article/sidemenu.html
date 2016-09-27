@@ -17,6 +17,8 @@
         </notempty>
         <!-- /子导航 -->
     </volist>
+
+    <if condition="C('OPEN_MY_DOCUMENT')">
  <h3>
  	<i class="icon <notin name="Think.ACTION_NAME"  value="mydocument,draftbox,examine">icon-fold</notin>"></i>
  	个人中心
@@ -30,6 +32,7 @@
 		<li <eq name="Think.ACTION_NAME" value="examine">class="examine"</eq>><a class="item" href="{:U('article/examine')}">待审核</a></li>
 		</eq>
  	</ul>
+    </if>
 
     <volist name="nodes" id="sub_menu">
         <!-- 子导航 -->
@@ -82,6 +85,8 @@
         </notempty>
         <!-- /子导航 -->
     </volist>
+
+    <if condition="C('OPEN_RECYCLE')">
     <!-- 回收站 -->
 	<eq name="show_recycle" value="1">
     <h3>
@@ -89,6 +94,7 @@
         <a href="{:U('article/recycle')}">回收站</a>
     </h3>
     </eq>
+    </if>
 </div>
 <script>
     $(function(){
