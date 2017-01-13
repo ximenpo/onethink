@@ -17,21 +17,21 @@ use Admin\Model\AuthRuleModel;
 */
 class PublicController extends \Think\Controller {
 
+    protected function _initialize(){
+        /* 读取数据库中的配置 */
+        $config	=	S('DB_CONFIG_DATA');
+        if(!$config){
+            $config	=	D('Config')->lists();
+            S('DB_CONFIG_DATA',$config);
+        }
+        C($config); //添加配置
+    }
+
     /**
     * 后台用户登录
     * @author 麦当苗儿 <zuojiazi@vip.qq.com>
     */
     public function login($username = null, $password = null, $verify = null){
-        {
-            /* 读取数据库中的配置 */
-            $config	=	S('DB_CONFIG_DATA');
-            if(!$config){
-                $config	=	D('Config')->lists();
-                S('DB_CONFIG_DATA',$config);
-            }
-            C($config); //添加配置
-        }
-
         if(IS_POST){
             /* 调用UC登录接口登录 */
             $User = new UserApi;
@@ -45,6 +45,11 @@ class PublicController extends \Think\Controller {
                 case 2:
                 if(!$User->verifyOTP($username, $verify, true)){
                     $this->error('动态验证码输入错误！');
+                }
+                break;
+                case 3:
+                if(!$User->verifyGeetest()){
+                    $this->error('验证码错误！');
                 }
                 break;
             }
@@ -107,6 +112,15 @@ class PublicController extends \Think\Controller {
     public function verify(){
         $verify = new \Think\Verify();
         $verify->entry(1);
+    }
+
+    public function geetestInit(){
+        if(C('ADMIN_LOGIN_EXTRA_VERIFY') == 3){
+            exit((new UserApi)->initGeetest());
+        }
+
+		/* 返回JSON数据 */
+		$this->ajaxReturn();
     }
 
 }

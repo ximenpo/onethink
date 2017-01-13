@@ -75,6 +75,39 @@ class UserApi extends Api{
     }
 
     /**
+     *  极验验证 初始化
+     *
+     * @return bool 检测结果
+     *
+     * @author ximenpo <ximenpo@jiandan.ren>
+     */
+    public function initGeetest()
+    {
+        vendor('Geetestlib');
+        $GtSdk = new \GeetestLib(C('GEETEST_CAPTCHA_ID'), C('GEETEST_PRIVATE_KEY'));
+        $_SESSION['GEETEST_server_status'] = $GtSdk->pre_process();
+        return  $GtSdk->get_response_str();
+    }
+
+    /**
+     *  极验验证 验证
+     *
+     * @return bool 检测结果
+     *
+     * @author ximenpo <ximenpo@jiandan.ren>
+     */
+    public function verifyGeetest()
+    {
+        vendor('Geetestlib');
+        $GtSdk = new \GeetestLib(C('GEETEST_CAPTCHA_ID'), C('GEETEST_PRIVATE_KEY'));
+        if ($_SESSION['GEETEST_server_status'] == 1) {
+            return  $GtSdk->success_validate($_POST['geetest_challenge'], $_POST['geetest_validate'], $_POST['geetest_seccode']);
+        }else{
+            return  $GtSdk->fail_validate($_POST['geetest_challenge'],$_POST['geetest_validate'],$_POST['geetest_seccode']);
+        }
+    }
+
+    /**
      * 检测用户名
      * @param  string  $field  用户名
      * @return integer         错误编号
